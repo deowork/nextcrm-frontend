@@ -8,6 +8,7 @@ import { useForm } from '@mantine/form'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import {decode as atob} from 'base-64'
 import {
   TextInput,
   PasswordInput,

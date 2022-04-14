@@ -1,74 +1,95 @@
-import ApplicationLogo from '@/components/ApplicationLogo'
-import AuthCard from '@/components/AuthCard'
+import {TextInput, Checkbox, Button, Group, Box, Center, Paper, PaperProps} from '@mantine/core'
+import {useForm} from '@mantine/form'
+import {At} from "tabler-icons-react"
+import {useAuth} from "@/hooks/auth"
+import {useState} from "react"
+import AuthCard from "@/components/AuthCard"
+import Link from "next/link"
+import ApplicationLogo from "@/components/ApplicationLogo"
+import GuestLayout from "@/components/Layouts/GuestLayout"
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import AuthValidationErrors from '@/components/AuthValidationErrors'
-import Button from '@/components/Button'
-import GuestLayout from '@/components/Layouts/GuestLayout'
-import Input from '@/components/Input'
-import Label from '@/components/Label'
-import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import {useRouter} from "next/router"
 
-const ForgotPassword = () => {
-    const { forgotPassword } = useAuth({ middleware: 'guest' })
+const ForgotPassword = (props: PaperProps<'div'>) => {
 
-    const [email, setEmail] = useState('')
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
 
-    const submitForm = event => {
-        event.preventDefault()
 
-        forgotPassword({ email, setErrors, setStatus })
-    }
+  const router = useRouter()
 
-    return (
-        <GuestLayout>
-            <AuthCard
-                logo={
-                    <Link href="/">
-                        <a>
-                            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                        </a>
-                    </Link>
-                }>
+  const {forgotPassword} = useAuth({middleware: 'guest'})
 
-                <div className="mb-4 text-sm text-gray-600">
-                    Forgot your password? No problem. Just let us know your
-                    email address and we will email you a password reset link
-                    that will allow you to choose a new one.
-                </div>
+  const [email, setEmail] = useState('')
+  const [errors, setErrors] = useState([])
+  const [status, setStatus] = useState(null)
 
-                {/* Session Status */}
-                <AuthSessionStatus className="mb-4" status={status} />
+  const form = useForm({
+    initialValues: {
+      email: '',
+    },
 
-                {/* Validation Errors */}
-                <AuthValidationErrors className="mb-4" errors={errors} />
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    },
+  });
 
-                <form onSubmit={submitForm}>
-                    {/* Email Address */}
-                    <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value={email}
-                            className="block mt-1 w-full"
-                            onChange={event => setEmail(event.target.value)}
-                            required
-                            autoFocus
-                        />
-                    </div>
+  const handleSubmit = async ({email}) => {
+    await forgotPassword({setErrors, setStatus, email})
+  }
 
-                    <div className="flex items-center justify-end mt-4">
-                        <Button>Email Password Reset Link</Button>
-                    </div>
-                </form>
-            </AuthCard>
-        </GuestLayout>
-    )
+  return (
+    <GuestLayout>
+      <AuthCard
+        logo={
+          <Center mt={30}>
+            <Link href="/">
+              <a>
+                <ApplicationLogo width="80" height="80" fill="#ef3b2d"/>
+              </a>
+            </Link>
+          </Center>
+        }>
+        <Paper
+          radius="md"
+          p="xl"
+          sx={{maxWidth: 500}}
+          mx="auto"
+          mt={30}
+          withBorder
+          {...props}>
+          <Box sx={{maxWidth: 300}} mx="auto">
+            {/* Session Status */}
+            <AuthSessionStatus className="mb-4" status={status}/>
+
+            {/* Validation Errors */}
+            <AuthValidationErrors className="mb-4" errors={errors}/>
+
+            <form onSubmit={form.onSubmit(handleSubmit)}>
+              <TextInput
+                required
+                autoFocus
+                icon={<At/>}
+                label="Email"
+                id="email"
+                type="email"
+                value={email}
+                placeholder="your@email.com"
+                onChange={event =>
+                  setEmail(event.target.value)
+                }
+                error={form.errors.email && 'Invalid email'}
+                {...form.getInputProps('email')}
+              />
+
+              <Group position="right" mt="md">
+                <Button type="submit">Email Password Reset Link</Button>
+              </Group>
+            </form>
+          </Box>
+        </Paper>
+      </AuthCard>
+    </GuestLayout>
+  );
 }
 
 export default ForgotPassword
