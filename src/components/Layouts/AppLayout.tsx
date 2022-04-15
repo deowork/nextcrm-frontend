@@ -16,6 +16,7 @@ import {
   Adjustments,
   Lock,
 } from 'tabler-icons-react'
+import { ColorSchemeToggle } from '@/components/ColorScheme'
 import { UserCard } from '@/components/UserCard/UserCard'
 import { LinksGroup } from '@/components/LinksGroup/LinksGroup'
 import ApplicationLogo from '@/components/ApplicationLogo'
@@ -58,7 +59,6 @@ const useStyles = createStyles(theme => ({
   navbar: {
     backgroundColor:
       theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
-    paddingBottom: 0,
   },
 
   header: {
@@ -110,7 +110,8 @@ const AppLayout = ({ header, children }) => {
           className={classes.navbar}>
           <Navbar.Section className={classes.header}>
             <Group position="apart">
-              <ApplicationLogo width={60} fill="#ef3b2d" />
+              <ApplicationLogo width={50} fill="#ef3b2d" />
+              <ColorSchemeToggle />
             </Group>
           </Navbar.Section>
 
