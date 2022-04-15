@@ -67,13 +67,15 @@ interface LinksGroupProps {
   icon: TablerIcon
   label: string
   initiallyOpened?: boolean
-  links?: { label: string; link: string }[]
+  onClick?: Function
+  links?: { label: string; link: string; onClick?: Function }[]
 }
 
 export function LinksGroup({
   icon: Icon,
   label,
   initiallyOpened,
+  onClick,
   links,
 }: LinksGroupProps) {
   const { classes, theme } = useStyles()
@@ -86,7 +88,10 @@ export function LinksGroup({
       className={classes.link}
       href={link.link}
       key={link.label}
-      onClick={event => event.preventDefault()}>
+      onClick={event => {
+        event.preventDefault()
+        link?.onClick && link.onClick()
+      }}>
       {link.label}
     </Text>
   ))
@@ -94,7 +99,13 @@ export function LinksGroup({
   return (
     <>
       <UnstyledButton
-        onClick={() => setOpened(o => !o)}
+        onClick={() => {
+          if (!hasLinks && onClick) {
+            onClick()
+          }
+
+          setOpened(o => !o)
+        }}
         className={classes.control}>
         <Group position="apart" spacing={0}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -118,29 +129,5 @@ export function LinksGroup({
       </UnstyledButton>
       {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
     </>
-  )
-}
-
-const mockdata = {
-  label: 'Releases',
-  icon: CalendarStats,
-  links: [
-    { label: 'Upcoming releases', link: '/' },
-    { label: 'Previous releases', link: '/' },
-    { label: 'Releases schedule', link: '/' },
-  ],
-}
-
-export function NavbarLinksGroup() {
-  return (
-    <Box
-      sx={theme => ({
-        minHeight: 220,
-        padding: theme.spacing.md,
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
-      })}>
-      <LinksGroup {...mockdata} />
-    </Box>
   )
 }

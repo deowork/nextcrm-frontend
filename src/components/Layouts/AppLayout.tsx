@@ -14,6 +14,7 @@ import {
   PresentationAnalytics,
   FileAnalytics,
   Adjustments,
+  Logout,
   Lock,
 } from 'tabler-icons-react'
 import { ColorSchemeToggle } from '@/components/ColorScheme'
@@ -92,12 +93,14 @@ const useStyles = createStyles(theme => ({
 }))
 
 const AppLayout = ({ header, children }) => {
-  const { user } = useAuth({ middleware: 'auth' })
+  const { user, logout } = useAuth({ middleware: 'auth' })
 
   const { classes } = useStyles()
   const links = navbarLinks.map(item => (
     <LinksGroup {...item} key={item.label} />
   ))
+
+  const logoutLink = { label: 'Logout', icon: Logout, onClick: logout }
 
   return (
     <AppShell
@@ -116,7 +119,10 @@ const AppLayout = ({ header, children }) => {
           </Navbar.Section>
 
           <Navbar.Section grow className={classes.links} component={ScrollArea}>
-            <div className={classes.linksInner}>{links}</div>
+            <div className={classes.linksInner}>
+              {links}
+              <LinksGroup {...logoutLink} key={logoutLink.label} />
+            </div>
           </Navbar.Section>
 
           <Navbar.Section className={classes.footer}>
