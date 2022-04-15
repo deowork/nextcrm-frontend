@@ -1,4 +1,4 @@
-import {useForm} from '@mantine/form'
+import { useForm } from '@mantine/form'
 import {
   PasswordInput,
   Group,
@@ -10,26 +10,31 @@ import {
   Divider,
   PaperProps,
   TextInput,
-  Checkbox, Anchor
+  Checkbox,
+  Anchor,
 } from '@mantine/core'
-import AuthCard from "@/components/AuthCard"
-import Link from "next/link"
-import ApplicationLogo from "@/components/ApplicationLogo"
-import {GithubButton, GoogleButton} from "@/components/SocialButtons/SocialButtons"
-import AuthValidationErrors from "@/components/AuthValidationErrors"
-import GuestLayout from "@/components/Layouts/GuestLayout"
-import {useState} from "react"
-import {useAuth} from "@/hooks/auth"
-import {At} from "tabler-icons-react"
-import {createStyles} from '@mantine/core';
+import AuthCard from '@/components/AuthCard'
+import Link from 'next/link'
+import ApplicationLogo from '@/components/ApplicationLogo'
+import {
+  GithubButton,
+  GoogleButton,
+} from '@/components/SocialButtons/SocialButtons'
+import AuthValidationErrors from '@/components/AuthValidationErrors'
+import GuestLayout from '@/components/Layouts/GuestLayout'
+import { useState } from 'react'
+import { useAuth } from '@/hooks/auth'
+import { At, Lock } from 'tabler-icons-react'
+import { createStyles } from '@mantine/core'
+import { PasswordStrength } from '@/components/PasswordStrengthMeter'
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   link: {
     color: '#adb5bd',
     fontSize: '12px',
     textAlign: 'left',
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 }))
 
 interface FormValues {
@@ -40,38 +45,33 @@ interface FormValues {
   remember: boolean
 }
 
-
 const Register = (props: PaperProps<'div'>) => {
-  const {classes} = useStyles();
+  const { classes } = useStyles()
 
   const form = useForm({
     initialValues: {
       name: '',
       email: '',
-      password: 'secret',
-      password_confirmation: 'sevret',
-      remember: false
+      password: '',
+      password_confirmation: '',
+      remember: false,
     },
 
     validate: {
       password_confirmation: (value, values) =>
         value !== values.password ? 'Passwords did not match' : null,
     },
-  });
+  })
 
-  const {register} = useAuth({
+  const { register } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [password_confirmation, setPasswordConfirmation] = useState('')
   const [errors, setErrors] = useState([])
 
   const submitForm = async (props: FormValues) => {
-    await register({setErrors, ...props})
+    await register({ setErrors, ...props })
   }
 
   return (
@@ -81,7 +81,7 @@ const Register = (props: PaperProps<'div'>) => {
           <Center mt={30}>
             <Link href="/">
               <a>
-                <ApplicationLogo width="80" height="80" fill="#ef3b2d"/>
+                <ApplicationLogo width="80" height="80" fill="#ef3b2d" />
               </a>
             </Link>
           </Center>
@@ -89,7 +89,7 @@ const Register = (props: PaperProps<'div'>) => {
         <Paper
           radius="md"
           p="xl"
-          sx={{maxWidth: 500}}
+          sx={{ maxWidth: 500 }}
           mx="auto"
           mt={30}
           withBorder
@@ -109,22 +109,24 @@ const Register = (props: PaperProps<'div'>) => {
             my="lg"
           />
 
-          <AuthValidationErrors mb={15} errors={errors}/>
+          <AuthValidationErrors mb={15} errors={errors} />
 
           <form onSubmit={form.onSubmit(submitForm)}>
-
             <Group direction="column" grow>
-
-              <TextInput label="Name" placeholder="Name" {...form.getInputProps('name')} />
+              <TextInput
+                autoFocus
+                label="Name"
+                placeholder="Name"
+                {...form.getInputProps('name')}
+              />
 
               <TextInput
                 required
-                autoFocus
-                icon={<At/>}
                 label="Email"
                 id="email"
                 type="email"
                 placeholder="your@email.com"
+                icon={<At size={16} />}
                 value={form.values.email}
                 onChange={event =>
                   form.setFieldValue('email', event.currentTarget.value)
@@ -133,28 +135,28 @@ const Register = (props: PaperProps<'div'>) => {
                 {...form.getInputProps('email')}
               />
 
-              <PasswordInput
-                id="password"
-                type="password"
-                value={password}
-                label="Password"
-                placeholder="Password"
-                onChange={event => setPassword(event.target.value)}
+              <PasswordStrength
                 required
+                label="Password"
+                id="password"
+                placeholder="Password"
                 autoComplete="new-password"
+                onChange={password => form.setFieldValue('password', password)}
+                icon={<Lock size={16} />}
                 {...form.getInputProps('password')}
               />
 
               <PasswordInput
                 required
                 id="password_confirmation"
-                mt="sm"
                 label="Confirm password"
                 placeholder="Confirm password"
-                type="password"
-                value={password_confirmation}
+                icon={<Lock size={16} />}
                 onChange={event =>
-                  setPasswordConfirmation(event.target.value)
+                  form.setFieldValue(
+                    'password_confirmation',
+                    event.currentTarget.value,
+                  )
                 }
                 {...form.getInputProps('password_confirmation')}
               />
@@ -164,16 +166,13 @@ const Register = (props: PaperProps<'div'>) => {
                 id="remember_me"
                 name="remember"
                 label="Remember me"
-                {...form.getInputProps('remember', {type: 'checkbox'})}
+                {...form.getInputProps('remember', { type: 'checkbox' })}
               />
-
             </Group>
 
             <Group position="apart" mt="xl">
               <Anchor component={Link} href="/login">
-                <a className={classes.link}>
-                  Already registered?
-                </a>
+                <a className={classes.link}>Already registered?</a>
               </Anchor>
               <Button type="submit">Submit</Button>
             </Group>
@@ -181,7 +180,7 @@ const Register = (props: PaperProps<'div'>) => {
         </Paper>
       </AuthCard>
     </GuestLayout>
-  );
+  )
 }
 
 export default Register
