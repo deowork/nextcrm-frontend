@@ -38,7 +38,7 @@ const navbarLinks = [
     label: 'Users',
     icon: Users,
     links: [
-      { label: 'Manage', link: '/' },
+      { label: 'Manage', link: '/users' },
       { label: 'Create', link: '/' },
       { label: 'Roles', link: '/' },
     ],
