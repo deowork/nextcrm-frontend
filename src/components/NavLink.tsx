@@ -1,16 +1,69 @@
 import Link from 'next/link'
+import { createStyles, UnstyledButton, Badge } from '@mantine/core'
+import React from 'react'
 
-const NavLink = ({ active = false, children, ...props }) => (
-    <Link {...props}>
-        <a
-            className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out ${
-                active
-                    ? 'border-indigo-400 text-gray-900 focus:border-indigo-700'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300'
-            }`}>
-            {children}
-        </a>
+const useStyles = createStyles(theme => ({
+  mainLink: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
+    borderRadius: theme.radius.sm,
+    fontWeight: 400,
+    color:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[0]
+        : theme.colors.gray[7],
+
+    '&:hover': {
+      backgroundColor:
+        theme.colorScheme === 'dark'
+          ? theme.colors.dark[6]
+          : theme.colors.gray[0],
+      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    },
+  },
+
+  mainLinkInner: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  mainLinkIcon: {
+    marginRight: theme.spacing.sm,
+    color:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[2]
+        : theme.colors.gray[6],
+  },
+
+  mainLinkBadge: {
+    padding: 0,
+    width: 20,
+    height: 20,
+    pointerEvents: 'none',
+  },
+}))
+
+const NavLink = ({ link }) => {
+  const { classes } = useStyles()
+
+  return (
+    <Link href={link?.link ?? '/'}>
+      <UnstyledButton key={link.label} className={classes.mainLink}>
+        <div className={classes.mainLinkInner}>
+          <link.icon size={20} className={classes.mainLinkIcon} />
+          <span>{link.label}</span>
+        </div>
+        {link.notifications && (
+          <Badge size="xs" variant="outline" className={classes.mainLinkBadge}>
+            {link.notifications}
+          </Badge>
+        )}
+      </UnstyledButton>
     </Link>
-)
+  )
+}
 
 export default NavLink
