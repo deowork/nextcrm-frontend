@@ -9,28 +9,54 @@ import {
 } from '@mantine/core'
 import { Pencil, Trash } from 'tabler-icons-react'
 import AppLayout from '@/components/Layouts/AppLayout'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 interface UsersTableProps {
   data: {
-    avatar: string
     name: string
-    job: string
     email: string
     phone: string
   }[]
 }
 
-export async function getStaticProps() {
-  const response = await fetch('https://jsonplaceholder.typicode.com/users')
-  const data = await response.json()
-  return {
-    props: {
-      users: data,
-    },
-  }
+const usersEndpoint = '/api/users'
+const getData = async () => {
+  const response = await axios(usersEndpoint)
+  return response.data
 }
 
-export default function UsersTable({ users }, { data }: UsersTableProps) {
+const UsersTable = ({ data }: UsersTableProps) => {
+  const { data: users, error } = useSWR(usersEndpoint, getData)
+
+  if (error) {
+    const rows = (
+      <AppLayout
+        header={
+          <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+            Users
+          </h2>
+        }>
+        <div>{error.message}</div>
+      </AppLayout>
+    )
+    return rows
+  }
+
+  if (!users) {
+    const rows = (
+      <AppLayout
+        header={
+          <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+            Users
+          </h2>
+        }>
+        <div>Loading ...</div>
+      </AppLayout>
+    )
+    return rows
+  }
+
   const rows = users.map(item => (
     <tr key={item.id}>
       <td>
@@ -90,3 +116,5 @@ export default function UsersTable({ users }, { data }: UsersTableProps) {
     </AppLayout>
   )
 }
+
+export default UsersTable
