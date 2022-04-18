@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/auth'
 import { useDisclosure } from '@mantine/hooks'
 import { createStyles, AppShell, Text } from '@mantine/core'
 import Header from '@/components/Layouts/App/Header'
-import Navigation from '@/components/Layouts/Navigation'
+import Navigation from '@/components/Layouts/App/Navigation'
 import Footer from '@/components/Layouts/App/Footer'
 
 const useStyles = createStyles(theme => ({

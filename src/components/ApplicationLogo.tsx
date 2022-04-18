@@ -1,4 +1,5 @@
 import { Text } from '@mantine/core'
+import { NextLink } from '@mantine/next'
 
 export const ApplicationLogo = props => (
   <svg viewBox="0 0 316 316" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -6,6 +7,14 @@ export const ApplicationLogo = props => (
   </svg>
 )
 
-export const TextLogo = props => <Text {...props}>NextCRM</Text>
+export const TextLogo = ({ href = '/', weight = 700, ...props }) => (
+  <Text<typeof NextLink>
+    component={NextLink}
+    href={href}
+    weight={weight}
+    {...props}>
+    NextCRM
+  </Text>
+)
 
 export default ApplicationLogo

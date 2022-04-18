@@ -1,10 +1,48 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
-import { Group, Button } from '@mantine/core'
+import { HeaderResponsive } from '@/components/Layouts/Home/Header'
+import { FeaturesTitle } from '@/components/Sections/Features'
+import { AppWindow, ClearAll, Cloud, Users } from 'tabler-icons-react'
 
 export default function Home() {
   const { user } = useAuth({ middleware: 'guest' })
+
+  const links = [
+    { label: 'Home', link: '/' },
+    { label: 'Support', link: '/support' },
+  ]
+
+  if (!user) {
+    links.push(
+      { label: 'Register', link: '/register' },
+      { label: 'Login', link: '/login' },
+    )
+  } else {
+    links.push({ label: 'Dashboard', link: '/dashboard' })
+  }
+
+  const features = [
+    {
+      icon: ClearAll,
+      title: 'Just simple',
+      description: 'Nothing unnecessary',
+    },
+    {
+      icon: AppWindow,
+      title: 'Use offline',
+      description: 'Install progressive web app',
+    },
+    {
+      icon: Users,
+      title: 'Team manager',
+      description: 'Flexible role assignment',
+    },
+    {
+      icon: Cloud,
+      title: 'Cloud based',
+      description: 'Complete synchronization',
+    },
+  ]
 
   return (
     <>
@@ -12,29 +50,8 @@ export default function Home() {
         <title>Main Page | NextCRM</title>
       </Head>
 
-      <Group mt={10} ml={10}>
-        {user ? (
-          <Link href="/dashboard" passHref>
-            <Button component="a" variant="outline">
-              Dashboard
-            </Button>
-          </Link>
-        ) : (
-          <>
-            <Link href="/login" passHref>
-              <Button component="a" variant="outline">
-                Login
-              </Button>
-            </Link>
-
-            <Link href="/register" passHref>
-              <Button component="a" variant="outline">
-                Register
-              </Button>
-            </Link>
-          </>
-        )}
-      </Group>
+      <HeaderResponsive user={user} links={links} />
+      <FeaturesTitle features={features} />
     </>
   )
 }
