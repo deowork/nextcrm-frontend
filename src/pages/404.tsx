@@ -11,6 +11,8 @@ import {
 } from '@mantine/core'
 import { ChevronLeft, ChevronRight } from 'tabler-icons-react'
 import { useAuth } from '@/hooks/auth'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   root: {
@@ -65,6 +67,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 const NotFoundPage = () => {
+  const { t } = useTranslation('common')
   const { classes } = useStyles()
   const { user } = useAuth()
 
@@ -77,13 +80,13 @@ const NotFoundPage = () => {
 
       <Text className={classes.label}>404</Text>
       <Title className={classes.title}>
-        You have found a{' '}
+        {t('You have found a')}{' '}
         <Text
           inherit
           component="span"
           variant="gradient"
           gradient={{ from: 'blue', to: 'cyan' }}>
-          secret place
+          {t('secret place')}
         </Text>
       </Title>
       <Text
@@ -91,8 +94,10 @@ const NotFoundPage = () => {
         size="lg"
         align="center"
         className={classes.description}>
-        Unfortunately, this is only a 404 page. You may have mistyped the
-        address, or the page has been moved to another URL
+        {t(
+          'Unfortunately, this is only a 404 page. You may have mistyped the' +
+            ' address, or the page has been moved to another URL',
+        )}
       </Text>
       <Group position="center">
         <Link href="/" passHref>
@@ -101,7 +106,7 @@ const NotFoundPage = () => {
             component="a"
             variant="subtle"
             size="md">
-            Take me back to home page
+            {t('Take me back to home page')}
           </Button>
         </Link>
         {user ? (
@@ -111,7 +116,7 @@ const NotFoundPage = () => {
               component="a"
               variant="subtle"
               size="md">
-              Dashboard
+              {t('Dashboard')}
             </Button>
           </Link>
         ) : (
@@ -123,3 +128,9 @@ const NotFoundPage = () => {
 }
 
 export default NotFoundPage
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+})

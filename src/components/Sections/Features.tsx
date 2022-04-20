@@ -42,7 +42,7 @@ const useStyles = createStyles(theme => ({
   },
 }))
 
-export function FeaturesTitle({ features }) {
+export function FeaturesTitle({ title, description, features, actions }) {
   const { classes } = useStyles()
 
   const items = features.map(feature => (
@@ -72,18 +72,11 @@ export function FeaturesTitle({ features }) {
       <Grid gutter={80} m={0}>
         <Col span={12} md={5}>
           <Title className={classes.title} order={2}>
-            Minimalistic modern{' '}
-            <Text
-              component="span"
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan' }}
-              inherit>
-              CRM
-            </Text>
+            {title}
           </Title>
 
           <Text color="dimmed" mt="md">
-            The perfect solution for start-up business
+            {description}
           </Text>
 
           <Group>
@@ -93,10 +86,10 @@ export function FeaturesTitle({ features }) {
               size="md"
               variant="gradient"
               gradient={{ deg: 125, from: 'blue', to: 'cyan' }}>
-              Get started
+              {actions.primary}
             </Button>
             <Button mt="xl" radius="md" size="md" variant="default">
-              Contact us
+              {actions.secondary}
             </Button>
           </Group>
         </Col>

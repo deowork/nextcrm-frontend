@@ -27,6 +27,8 @@ import { useAuth } from '@/hooks/auth'
 import { At, Lock } from 'tabler-icons-react'
 import { createStyles } from '@mantine/core'
 import { PasswordStrength } from '@/components/PasswordStrengthMeter'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   link: {
@@ -46,6 +48,7 @@ interface FormValues {
 }
 
 const Register = (props: PaperProps<'div'>) => {
+  const { t } = useTranslation('common')
   const { classes } = useStyles()
 
   const form = useForm({
@@ -95,7 +98,7 @@ const Register = (props: PaperProps<'div'>) => {
           withBorder
           {...props}>
           <Text size="lg" weight={500}>
-            Welcome to NextCRM
+            {t('Welcome to')} NextCRM
           </Text>
 
           <Group grow mb="md" mt="md">
@@ -104,7 +107,7 @@ const Register = (props: PaperProps<'div'>) => {
           </Group>
 
           <Divider
-            label="Or continue with email"
+            label={t('Or continue with email')}
             labelPosition="center"
             my="lg"
           />
@@ -115,14 +118,14 @@ const Register = (props: PaperProps<'div'>) => {
             <Group direction="column" grow>
               <TextInput
                 autoFocus
-                label="Name"
-                placeholder="Name"
+                label={t('Name')}
+                placeholder={t('Name')}
                 {...form.getInputProps('name')}
               />
 
               <TextInput
                 required
-                label="Email"
+                label={t('Email')}
                 id="email"
                 type="email"
                 placeholder="your@email.com"
@@ -131,15 +134,15 @@ const Register = (props: PaperProps<'div'>) => {
                 onChange={event =>
                   form.setFieldValue('email', event.currentTarget.value)
                 }
-                error={form.errors.email && 'Invalid email'}
+                error={form.errors.email && t('Invalid email')}
                 {...form.getInputProps('email')}
               />
 
               <PasswordStrength
                 required
-                label="Password"
+                label={t('Password')}
                 id="password"
-                placeholder="Password"
+                placeholder={t('Password')}
                 autoComplete="new-password"
                 onChange={password => form.setFieldValue('password', password)}
                 icon={<Lock size={16} />}
@@ -149,8 +152,8 @@ const Register = (props: PaperProps<'div'>) => {
               <PasswordInput
                 required
                 id="password_confirmation"
-                label="Confirm password"
-                placeholder="Confirm password"
+                label={t('Confirm password')}
+                placeholder={t('Confirm password')}
                 icon={<Lock size={16} />}
                 onChange={event =>
                   form.setFieldValue(
@@ -165,16 +168,16 @@ const Register = (props: PaperProps<'div'>) => {
                 mt="md"
                 id="remember_me"
                 name="remember"
-                label="Remember me"
+                label={t('Remember me')}
                 {...form.getInputProps('remember', { type: 'checkbox' })}
               />
             </Group>
 
             <Group position="apart" mt="xl">
               <Anchor component={Link} href="/login">
-                <a className={classes.link}>Already registered?</a>
+                <a className={classes.link}>{t('Already registered')}?</a>
               </Anchor>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{t('Register')}</Button>
             </Group>
           </form>
         </Paper>
@@ -184,3 +187,9 @@ const Register = (props: PaperProps<'div'>) => {
 }
 
 export default Register
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+})

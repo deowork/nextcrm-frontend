@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createStyles, UnstyledButton, Badge } from '@mantine/core'
 import React from 'react'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   mainLink: {
@@ -47,6 +48,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 const NavLink = ({ link }) => {
+  const { t } = useTranslation('crm')
   const { classes } = useStyles()
 
   return (
@@ -54,7 +56,7 @@ const NavLink = ({ link }) => {
       <UnstyledButton key={link.label} className={classes.mainLink}>
         <div className={classes.mainLinkInner}>
           <link.icon size={20} className={classes.mainLinkIcon} />
-          <span>{link.label}</span>
+          <span>{t(link.label)}</span>
         </div>
         {link.notifications && (
           <Badge size="xs" variant="outline" className={classes.mainLinkBadge}>

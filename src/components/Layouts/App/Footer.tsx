@@ -11,13 +11,13 @@ import {
   Text,
   Menu,
 } from '@mantine/core'
-
 import {
   SwitchHorizontal,
   ChevronDown,
   Settings,
   Logout,
 } from 'tabler-icons-react'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   footer: {
@@ -45,6 +45,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 const Footer = ({ user, height = 70 }) => {
+  const { t } = useTranslation('crm')
   const { logout } = useAuth({ middleware: 'auth' })
   const [userMenuOpened, setUserMenuOpened] = useState(false)
 
@@ -78,15 +79,17 @@ const Footer = ({ user, height = 70 }) => {
               </Group>
             </UnstyledButton>
           }>
-          <Menu.Label>Settings</Menu.Label>
-          <Menu.Item icon={<Settings size={14} />}>Account settings</Menu.Item>
+          <Menu.Label>{t('Settings')}</Menu.Label>
+          <Menu.Item icon={<Settings size={14} />}>
+            {t('Account settings')}
+          </Menu.Item>
           <Menu.Item icon={<SwitchHorizontal size={14} />}>
-            Change account
+            {t('Change account')}
           </Menu.Item>
 
           <Divider />
           <Menu.Item color="red" icon={<Logout size={14} />} onClick={logout}>
-            Logout
+            {t('Logout')}
           </Menu.Item>
         </Menu>
       </Group>

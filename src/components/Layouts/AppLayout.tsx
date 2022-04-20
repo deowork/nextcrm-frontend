@@ -6,6 +6,7 @@ import { createStyles, AppShell, Text } from '@mantine/core'
 import Header from '@/components/Layouts/App/Header'
 import Navigation from '@/components/Layouts/App/Navigation'
 import Footer from '@/components/Layouts/App/Footer'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   main: {
@@ -27,7 +28,7 @@ const AppLayout = ({ header, children }) => {
       className={classes.main}
       asideOffsetBreakpoint="sm"
       navbarOffsetBreakpoint="sm"
-      header={<Header height={70} opened={opened} disclosure={disclosure} />}
+      header={<Header height={75} opened={opened} disclosure={disclosure} />}
       navbar={
         <Navigation
           width={{ sm: 200, lg: 300 }}

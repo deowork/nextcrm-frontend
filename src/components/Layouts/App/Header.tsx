@@ -8,6 +8,7 @@ import {
 } from '@mantine/core'
 import { ColorSchemeToggle } from '@/components/ColorScheme'
 import { TextLogo } from '@/components/ApplicationLogo'
+import { LanguagePicker } from '@/components/LanguagePicker'
 
 const Header = ({ opened, disclosure, height = 70 }) => {
   const theme = useMantineTheme()
@@ -25,7 +26,10 @@ const Header = ({ opened, disclosure, height = 70 }) => {
           />
         </MediaQuery>
         <TextLogo />
-        <ColorSchemeToggle />
+        <Group>
+          <LanguagePicker />
+          <ColorSchemeToggle />
+        </Group>
       </Group>
     </MantineHeader>
   )

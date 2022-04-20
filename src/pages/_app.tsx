@@ -7,11 +7,12 @@ import {
 } from '@mantine/core'
 import { AppProps } from 'next/app'
 import { GetServerSidePropsContext } from 'next'
+import { appWithTranslation } from 'next-i18next'
 import { getCookie, setCookies } from 'cookies-next'
 
 const colorSchemeKey = 'nextcrm-scheme'
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+const App = (props: AppProps & { colorScheme: ColorScheme }) => {
   const { Component, pageProps } = props
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme)
 
@@ -50,3 +51,5 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
   colorScheme: getCookie(colorSchemeKey, ctx) || 'dark',
 })
+
+export default appWithTranslation(App)

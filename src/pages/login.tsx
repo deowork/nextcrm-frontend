@@ -8,7 +8,7 @@ import { useForm } from '@mantine/form'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import {decode as atob} from 'base-64'
+import { decode as atob } from 'base-64'
 import {
   TextInput,
   PasswordInput,
@@ -27,6 +27,8 @@ import {
   GithubButton,
 } from '@/components/SocialButtons/SocialButtons'
 import { At } from 'tabler-icons-react'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 interface FormValues {
   email: string
@@ -35,6 +37,8 @@ interface FormValues {
 }
 
 const Login = (props: PaperProps<'div'>) => {
+  const { t } = useTranslation('common')
+
   const form = useForm<FormValues>({
     initialValues: {
       email: '',
@@ -90,7 +94,7 @@ const Login = (props: PaperProps<'div'>) => {
           withBorder
           {...props}>
           <Text size="lg" weight={500}>
-            Welcome to NextCRM
+            {t('Welcome to')} NextCRM
           </Text>
 
           <Group grow mb="md" mt="md">
@@ -99,7 +103,7 @@ const Login = (props: PaperProps<'div'>) => {
           </Group>
 
           <Divider
-            label="Or continue with email"
+            label={t('Or continue with email')}
             labelPosition="center"
             my="lg"
           />
@@ -113,8 +117,8 @@ const Login = (props: PaperProps<'div'>) => {
               <TextInput
                 required
                 autoFocus
-                icon={<At />}
-                label="Email"
+                icon={<At size={16} />}
+                label={t('Email')}
                 id="email"
                 type="email"
                 placeholder="your@email.com"
@@ -128,9 +132,9 @@ const Login = (props: PaperProps<'div'>) => {
 
               <PasswordInput
                 required
-                label="Password"
+                label={t('Password')}
                 id="password"
-                placeholder="Your password"
+                placeholder={t('Your password')}
                 value={form.values.password}
                 onChange={event =>
                   form.setFieldValue('password', event.currentTarget.value)
@@ -142,16 +146,16 @@ const Login = (props: PaperProps<'div'>) => {
                 mt="md"
                 id="remember_me"
                 name="remember"
-                label="Remember me"
+                label={t('Remember me')}
                 {...form.getInputProps('remember', { type: 'checkbox' })}
               />
             </Group>
 
             <Group position="apart" mt="xl">
               <Anchor color="gray" href="/forgot-password" size="xs">
-                Forgot your password?
+                {t('Forgot your password?')}
               </Anchor>
-              <Button type="submit">Login</Button>
+              <Button type="submit">{t('Login')}</Button>
             </Group>
           </form>
         </Paper>
@@ -161,3 +165,9 @@ const Login = (props: PaperProps<'div'>) => {
 }
 
 export default Login
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+})

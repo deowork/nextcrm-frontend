@@ -11,7 +11,7 @@ const useStyles = createStyles(theme => ({
 const Navigation = ({ links, opened, width }) => {
   const { classes } = useStyles()
 
-  links = links.map(link => <NavLink link={link} key={link.label} />)
+  links = links.map(link => <NavLink link={link} key={link.link} />)
 
   return (
     <Navbar hidden={!opened} width={width}>
