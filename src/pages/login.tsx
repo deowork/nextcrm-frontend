@@ -21,6 +21,7 @@ import {
   Divider,
   Anchor,
   Group,
+  createStyles,
 } from '@mantine/core'
 import {
   GoogleButton,
@@ -30,6 +31,15 @@ import { At } from 'tabler-icons-react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 
+const useStyles = createStyles(theme => ({
+  link: {
+    color: '#adb5bd',
+    textAlign: 'left',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+}))
+
 interface FormValues {
   email: string
   password: string
@@ -37,6 +47,7 @@ interface FormValues {
 }
 
 const Login = (props: PaperProps<'div'>) => {
+  const { classes } = useStyles()
   const { t } = useTranslation('common')
 
   const form = useForm<FormValues>({
@@ -152,8 +163,12 @@ const Login = (props: PaperProps<'div'>) => {
             </Group>
 
             <Group position="apart" mt="xl">
-              <Anchor color="gray" href="/forgot-password" size="xs">
-                {t('Forgot your password?')}
+              <Anchor
+                color="gray"
+                href="/forgot-password"
+                size="xs"
+                component={Link}>
+                <a className={classes.link}>{t('Forgot your password?')}</a>
               </Anchor>
               <Button type="submit">{t('Login')}</Button>
             </Group>

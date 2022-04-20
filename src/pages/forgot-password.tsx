@@ -1,32 +1,61 @@
 import {
   TextInput,
-  Checkbox,
+  Text,
   Button,
   Group,
   Box,
   Center,
   Paper,
-  PaperProps,
+  Anchor,
+  createStyles,
+  Container,
+  Title,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { At } from 'tabler-icons-react'
+import { ArrowLeft } from 'tabler-icons-react'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
-import AuthCard from '@/components/AuthCard'
 import Link from 'next/link'
-import ApplicationLogo from '@/components/ApplicationLogo'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import AuthValidationErrors from '@/components/AuthValidationErrors'
-import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
-const ForgotPassword = (props: PaperProps<'div'>) => {
-  const router = useRouter()
+const useStyles = createStyles(theme => ({
+  title: {
+    fontSize: 26,
+    fontWeight: 900,
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+
+  controls: {
+    [theme.fn.smallerThan('xs')]: {
+      flexDirection: 'column-reverse',
+    },
+  },
+
+  control: {
+    [theme.fn.smallerThan('xs')]: {
+      width: '100%',
+      textAlign: 'center',
+    },
+  },
+
+  link: {
+    color: '#adb5bd',
+    textAlign: 'left',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+}))
+
+const ForgotPassword = () => {
+  const { classes } = useStyles()
+  const { t } = useTranslation('common')
 
   const { forgotPassword } = useAuth({ middleware: 'guest' })
 
-  const [email, setEmail] = useState('')
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
 
@@ -46,53 +75,54 @@ const ForgotPassword = (props: PaperProps<'div'>) => {
 
   return (
     <GuestLayout>
-      <AuthCard
-        logo={
-          <Center mt={30}>
-            <Link href="/">
-              <a>
-                <ApplicationLogo width="80" height="80" fill="#ef3b2d" />
-              </a>
-            </Link>
-          </Center>
-        }>
-        <Paper
-          radius="md"
-          p="xl"
-          sx={{ maxWidth: 500 }}
-          mx="auto"
-          mt={30}
-          withBorder
-          {...props}>
-          <Box sx={{ maxWidth: 300 }} mx="auto">
-            {/* Session Status */}
-            <AuthSessionStatus className="mb-4" status={status} />
+      <Container size={460} my={30}>
+        <Title className={classes.title} align="center">
+          {t('Forgot your password?')}
+        </Title>
+        <Text color="dimmed" size="sm" align="center">
+          {t('Enter your email to get a reset link')}
+        </Text>
 
-            {/* Validation Errors */}
-            <AuthValidationErrors className="mb-4" errors={errors} />
+        <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
+          {/* Session Status */}
+          <AuthSessionStatus className="mb-4" status={status} />
 
-            <form onSubmit={form.onSubmit(handleSubmit)}>
-              <TextInput
-                required
-                autoFocus
-                icon={<At />}
-                label="Email"
-                id="email"
-                type="email"
-                value={email}
-                placeholder="your@email.com"
-                onChange={event => setEmail(event.target.value)}
-                error={form.errors.email && 'Invalid email'}
-                {...form.getInputProps('email')}
-              />
+          {/* Validation Errors */}
+          <AuthValidationErrors className="mb-4" errors={errors} />
 
-              <Group position="right" mt="md">
-                <Button type="submit">Email Password Reset Link</Button>
-              </Group>
-            </form>
-          </Box>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <TextInput
+              required
+              autoFocus
+              label={t('Your email')}
+              placeholder="your@email.com"
+              onChange={event =>
+                form.setFieldValue('email', event.target.value)
+              }
+              error={form.errors.email && 'Invalid email'}
+              {...form.getInputProps('email')}
+            />
+            <Group position="apart" mt="lg" className={classes.controls}>
+              <Anchor
+                color="dimmed"
+                size="sm"
+                className={classes.control}
+                href={'/login'}
+                component={Link}>
+                <Center inline>
+                  <ArrowLeft size={12} />
+                  <Box ml={5}>
+                    <a className={classes.link}>{t('Back to login page')}</a>
+                  </Box>
+                </Center>
+              </Anchor>
+              <Button className={classes.control} type="submit">
+                {t('Reset password')}
+              </Button>
+            </Group>
+          </form>
         </Paper>
-      </AuthCard>
+      </Container>
     </GuestLayout>
   )
 }
