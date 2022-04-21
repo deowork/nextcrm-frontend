@@ -1,6 +1,15 @@
 import { useState } from 'react'
-import { Check, Lock, X } from 'tabler-icons-react'
-import { PasswordInput, Progress, Text, Popover, Box } from '@mantine/core'
+import { useInputState } from '@mantine/hooks'
+import { useTranslation } from 'next-i18next'
+import { Check, X } from 'tabler-icons-react'
+import {
+  PasswordInput,
+  Progress,
+  Popover,
+  Group,
+  Text,
+  Box,
+} from '@mantine/core'
 
 function PasswordRequirement({
   meets,
@@ -22,8 +31,8 @@ function PasswordRequirement({
 
 const requirements = [
   { re: /[0-9]/, label: 'Includes number' },
-  { re: /[a-zа-яё]/, label: 'Includes lowercase letter' },
-  { re: /[A-ZА-ЯЁ]/, label: 'Includes uppercase letter' },
+  { re: /[a-zа-яёіїє]/, label: 'Includes lowercase letter' },
+  { re: /[A-ZА-ЯЁІЇЄ]/, label: 'Includes uppercase letter' },
   { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes special symbol' },
 ]
 
@@ -39,26 +48,65 @@ function getStrength(password: string) {
   return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10)
 }
 
-export function PasswordStrength({ onChange, ...props }) {
+export function PasswordStrength({ popover = true, onChange, ...props }) {
+  const { t } = useTranslation('common')
   const [popoverOpened, setPopoverOpened] = useState(false)
-  const [value, setValue] = useState('')
+  const [value, setValue] = useInputState('')
+
+  const strength = getStrength(value)
+  const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red'
+
   const checks = requirements.map((requirement, index) => (
     <PasswordRequirement
       key={index}
-      label={requirement.label}
+      label={t(requirement.label)}
       meets={requirement.re.test(value)}
     />
   ))
 
-  const strength = getStrength(value)
-  const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red'
+  const bars = Array(4)
+    .fill(0)
+    .map((_, index) => (
+      <Progress
+        styles={{ bar: { transitionDuration: '0ms' } }}
+        value={
+          value.length > 0 && index === 0
+            ? 100
+            : strength >= ((index + 1) / 4) * 100
+            ? 100
+            : 0
+        }
+        color={color}
+        key={index}
+        size={4}
+      />
+    ))
 
   const handlePasswordChange = event => {
     setValue(event.currentTarget.value)
     onChange(event.currentTarget.value)
   }
 
-  return (
+  const passwordInput = (
+    <PasswordInput
+      required
+      value={value}
+      onChange={handlePasswordChange}
+      {...props}
+    />
+  )
+
+  const passwordRequirements = (
+    <>
+      <PasswordRequirement
+        label={t('Has at least 8 characters')}
+        meets={value.length >= 8}
+      />
+      {checks}
+    </>
+  )
+
+  return popover ? (
     <Popover
       opened={popoverOpened}
       position="bottom"
@@ -69,25 +117,25 @@ export function PasswordStrength({ onChange, ...props }) {
       transition="pop-top-left"
       onFocusCapture={() => setPopoverOpened(true)}
       onBlurCapture={() => setPopoverOpened(false)}
-      target={
-        <PasswordInput
-          required
-          value={value}
-          onChange={handlePasswordChange}
-          {...props}
-        />
-      }>
+      target={passwordInput}>
       <Progress
         color={color}
         value={strength}
         size={5}
         style={{ marginBottom: 10 }}
       />
-      <PasswordRequirement
-        label="Includes at least 6 characters"
-        meets={value.length > 5}
-      />
-      {checks}
+
+      {passwordRequirements}
     </Popover>
+  ) : (
+    <div>
+      {passwordInput}
+
+      <Group spacing={5} grow mt="xs" mb="md">
+        {bars}
+      </Group>
+
+      {passwordRequirements}
+    </div>
   )
 }

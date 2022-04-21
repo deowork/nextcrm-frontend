@@ -33,5 +33,13 @@
   "Take me back to home page": "Повернутися на домашню сторінку",
   "Back to login page": "Або авторизуватися",
   "Reset password": "Відновлення пароля",
-  "Enter your email to get a reset link": "Впишіть свою пошту, для отримання посилання на відновлення пароля"
+  "Enter your email to get a reset link": "Впишіть свою пошту, для отримання посилання на відновлення пароля",
+  "Get a new password for your account": "Отримайте новий пароль для свого облікового запису",
+  "Invalid email": "Невірна електронна пошта",
+  "Has at least 8 characters": "Має щонайменше 8 символів",
+  "Includes number": "Включає числа",
+  "Includes lowercase letter": "Включає малу літеру",
+  "Includes uppercase letter": "Включає велику літеру",
+  "Includes special symbol": "Включає спеціальний символ",
+  "Passwords did not match": "Паролі не збігаються"
 }

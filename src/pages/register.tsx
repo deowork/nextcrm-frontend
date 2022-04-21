@@ -3,7 +3,6 @@ import {
   PasswordInput,
   Group,
   Button,
-  Box,
   Center,
   Paper,
   Text,
@@ -62,7 +61,7 @@ const Register = (props: PaperProps<'div'>) => {
 
     validate: {
       password_confirmation: (value, values) =>
-        value !== values.password ? 'Passwords did not match' : null,
+        value !== values.password ? t('Passwords did not match') : null,
     },
   })
 
