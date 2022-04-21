@@ -1,59 +1,109 @@
-import ApplicationLogo from '@/components/ApplicationLogo'
-import AuthCard from '@/components/AuthCard'
-import Button from '@/components/Button'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
+import {
+  createStyles,
+  Container,
+  Button,
+  Alert,
+  Group,
+  Title,
+  Paper,
+  Text,
+} from '@mantine/core'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
+import { MailFast } from 'tabler-icons-react'
+
+const useStyles = createStyles(theme => ({
+  title: {
+    fontSize: 18,
+    fontWeight: 700,
+  },
+
+  controls: {
+    [theme.fn.smallerThan('xs')]: {
+      flexDirection: 'column-reverse',
+    },
+  },
+
+  control: {
+    [theme.fn.smallerThan('xs')]: {
+      width: '100%',
+      textAlign: 'center',
+    },
+  },
+
+  link: {
+    color: '#adb5bd',
+    textAlign: 'left',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+}))
 
 const VerifyEmail = () => {
-    const { logout, resendEmailVerification } = useAuth({
-        middleware: 'auth',
-    })
+  const { classes } = useStyles()
+  const { t } = useTranslation('common')
 
-    const [status, setStatus] = useState(null)
+  const { logout, resendEmailVerification } = useAuth({
+    middleware: 'auth',
+  })
 
-    return (
-        <GuestLayout>
-            <AuthCard
-                logo={
-                    <Link href="/">
-                        <a>
-                            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                        </a>
-                    </Link>
-                }>
+  const [status, setStatus] = useState(null)
 
-                <div className="mb-4 text-sm text-gray-600">
-                    Thanks for signing up! Before getting started, could you
-                    verify your email address by clicking on the link we just
-                    emailed to you? If you didn't receive the email, we will
-                    gladly send you another.
-                </div>
+  return (
+    <GuestLayout>
+      <Container size={560} my={30}>
+        <Paper withBorder shadow="md" p={30} radius="md" mt={80}>
+          <Title className={classes.title} mb="sm">
+            {t('Thanks for signing up')}!
+          </Title>
 
-                {status === 'verification-link-sent' && (
-                    <div className="mb-4 font-medium text-sm text-green-600">
-                        A new verification link has been sent to the email
-                        address you provided during registration.
-                    </div>
-                )}
+          <Text>
+            {t(
+              'Before getting started, could you verify your email address ' +
+                'by clicking on the link we just emailed to you?',
+            )}{' '}
+            {t(
+              "If you didn't receive the email, we will gladly send you another",
+            )}
+          </Text>
 
-                <div className="mt-4 flex items-center justify-between">
-                    <Button
-                        onClick={() => resendEmailVerification({ setStatus })}>
-                        Resend Verification Email
-                    </Button>
+          <Group position="apart" mt="lg" className={classes.controls}>
+            <Button variant="default" onClick={logout}>
+              {t('Logout')}
+            </Button>
 
-                    <button
-                        type="button"
-                        className="underline text-sm text-gray-600 hover:text-gray-900"
-                        onClick={logout}>
-                        Logout
-                    </button>
-                </div>
-            </AuthCard>
-        </GuestLayout>
-    )
+            <Button onClick={() => resendEmailVerification({ setStatus })}>
+              {t('Resend verification email')}
+            </Button>
+          </Group>
+        </Paper>
+
+        {status === 'verification-link-sent' && (
+          <Alert
+            icon={<MailFast size={24} />}
+            title={t('Success')}
+            color="green"
+            variant="filled"
+            radius="md"
+            mt={20}>
+            {t(
+              'A new verification link has been sent to the email address you ' +
+                'provided during registration',
+            )}
+          </Alert>
+        )}
+      </Container>
+    </GuestLayout>
+  )
 }
 
 export default VerifyEmail
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common', 'crm'])),
+  },
+})
