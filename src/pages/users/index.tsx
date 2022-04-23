@@ -6,8 +6,6 @@ import {
   Group,
   Text,
   ActionIcon,
-  Anchor,
-  Loader,
   Skeleton,
   ScrollArea,
 } from '@mantine/core'
@@ -15,6 +13,8 @@ import { Pencil, Trash } from 'tabler-icons-react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import axios from '@/lib/axios'
 import useSWR from 'swr'
+import User from '@/pages/users/user-tr'
+import PopoverCard from '@/components/UserCard/PopoverCard'
 
 interface UsersTableProps {
   data: {
@@ -38,19 +38,11 @@ const UsersTable = ({ data }: UsersTableProps) => {
     <tr key={item.id}>
       <td>
         <Group spacing="sm">
-          <Text size="sm" weight={500}>
-            {item.name}
-          </Text>
+          <PopoverCard {...item} />
         </Group>
       </td>
-
       <td>
-        <Anchor<'a'>
-          size="sm"
-          href="#"
-          onClick={event => event.preventDefault()}>
-          {item.email}
-        </Anchor>
+        <Text size="sm">{item.email}</Text>
       </td>
       <td>
         <Text size="sm" color="gray">

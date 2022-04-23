@@ -1,63 +1,62 @@
 import React from 'react'
-import {
-  UnstyledButton,
-  UnstyledButtonProps,
-  Group,
-  Avatar,
-  Text,
-  createStyles,
-} from '@mantine/core'
-import { ChevronRight } from 'tabler-icons-react'
+import { Group, Avatar, Text, createStyles } from '@mantine/core'
+import { At, ChevronRight, PhoneCall } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
-  user: {
-    display: 'block',
-    width: '100%',
-    padding: theme.spacing.md,
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+  icon: {
+    color:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[3]
+        : theme.colors.gray[5],
+  },
 
-    '&:hover': {
-      backgroundColor:
-        theme.colorScheme === 'dark'
-          ? theme.colors.dark[8]
-          : theme.colors.gray[0],
-    },
+  name: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
   },
 }))
 
-interface UserButtonProps extends UnstyledButtonProps {
+interface UserButtonProps {
   image: string
   name: string
   email: string
   icon?: React.ReactNode
 }
 
-export function UserCard({
-  image,
-  name,
-  email,
-  icon,
-  ...others
-}: UserButtonProps) {
+export function UserCard(user: UserButtonProps) {
   const { classes } = useStyles()
 
   return (
-    <UnstyledButton className={classes.user} {...others}>
-      <Group>
-        <Avatar src={image} radius="xl" />
-
-        <div style={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
-            {name}
+    <div>
+      <Group noWrap>
+        <Avatar src="" size={94} radius="md" />
+        <div>
+          <Text
+            size="xs"
+            sx={{ textTransform: 'uppercase' }}
+            weight={700}
+            color="dimmed">
+            Software engineer
           </Text>
 
-          <Text color="dimmed" size="xs">
-            {email}
+          <Text size="lg" weight={500} className={classes.name}>
+            {user.name}
           </Text>
+
+          <Group noWrap spacing={10} mt={3}>
+            <At size={16} className={classes.icon} />
+            <Text size="xs" color="dimmed">
+              {user.email}
+            </Text>
+          </Group>
+
+          <Group noWrap spacing={10} mt={5}>
+            <PhoneCall size={16} className={classes.icon} />
+            <Text size="xs" color="dimmed">
+              +380999999999
+            </Text>
+          </Group>
         </div>
-
-        {icon || <ChevronRight size={14} />}
       </Group>
-    </UnstyledButton>
+    </div>
   )
 }
