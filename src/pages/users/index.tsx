@@ -13,7 +13,6 @@ import { Pencil, Trash } from 'tabler-icons-react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import axios from '@/lib/axios'
 import useSWR from 'swr'
-import User from '@/pages/users/user-tr'
 import PopoverCard from '@/components/UserCard/PopoverCard'
 
 interface UsersTableProps {
