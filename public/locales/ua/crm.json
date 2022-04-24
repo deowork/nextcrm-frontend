@@ -3,6 +3,7 @@
   "Dashboard | NextCRM": "Особистий кабінет | NextCRM",
   "Orders": "Замовлення",
   "Clients": "Клієнти",
+  "Contacts": "Контакти",
   "Managers": "Менеджери",
   "Users": "Користувачі",
   "Settings": "Налаштування",
@@ -13,5 +14,10 @@
   "You're logged in": "Ви увійшли в систему",
   "User": "Користувач",
   "Phone": "Телефон",
-  "Email": "Пошта"
+  "Email": "Пошта",
+  "Search": "Пошук",
+  "Nothing found": "Нічого не знайдено",
+  "Name": "Ім'я",
+  "Company": "Компанія",
+  "Status": "Стан"
 }
