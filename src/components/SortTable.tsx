@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useOs } from '@mantine/hooks'
 import {
   createStyles,
@@ -82,6 +82,7 @@ interface RowData {
 
 interface TableSortProps {
   data: RowData[]
+  search: string
 }
 
 interface ThProps {
@@ -147,30 +148,11 @@ function sortData(
   )
 }
 
-export function TableSort({ data }: TableSortProps) {
-  const os = useOs()
-  const { classes } = useStyles()
+export function TableSort({ data, search }: TableSortProps) {
   const { t } = useTranslation('crm')
-  const [search, setSearch] = useState('')
   const [sortedData, setSortedData] = useState(data)
   const [sortBy, setSortBy] = useState<keyof RowData>(null)
   const [reverseSortDirection, setReverseSortDirection] = useState(false)
-
-  const [searchFocus, setSearchFocus] = useState(false)
-  const searchRef = useFocusTrap(searchFocus)
-  const useClickOutsideRef = useClickOutside(() => {
-    setSearchFocus(false)
-  })
-  const searchMergedRef = useMergedRef(searchRef, useClickOutsideRef)
-
-  useHotkeys([
-    [
-      'ctrl+K',
-      () => {
-        setSearchFocus(!searchFocus)
-      },
-    ],
-  ])
 
   const setSorting = field => {
     const reversed = field === sortBy ? !reverseSortDirection : false
@@ -179,13 +161,15 @@ export function TableSort({ data }: TableSortProps) {
     setSortedData(sortData(data, { sortBy: field, reversed, search }))
   }
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget
-    setSearch(value)
+  useEffect(() => {
     setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value }),
+      sortData(data, {
+        sortBy,
+        reversed: reverseSortDirection,
+        search: search,
+      }),
     )
-  }
+  }, [search])
 
   const sortColumns = {
     id: {},
@@ -266,28 +250,8 @@ export function TableSort({ data }: TableSortProps) {
     </tr>
   ))
 
-  const rightSection = (
-    <div className={classes.kbd}>
-      <Kbd className={classes.kbdKey}>{os === 'macos' ? '⌘' : 'Ctrl'}</Kbd>
-      <span>+</span>
-      <Kbd className={classes.kbdKey}>K</Kbd>
-    </div>
-  )
-
   return (
     <ScrollArea>
-      <Group spacing="lg" mb="md">
-        <TextInput
-          placeholder={t('Search')}
-          icon={<Search size={14} />}
-          value={search}
-          rightSectionWidth={95}
-          rightSection={rightSection}
-          styles={{ rightSection: { pointerEvents: 'none' } }}
-          onChange={handleSearchChange}
-          ref={searchMergedRef}
-        />
-      </Group>
       <Table
         verticalSpacing="xs"
         horizontalSpacing="md"
