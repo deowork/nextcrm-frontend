@@ -9,6 +9,7 @@ import { AppProps } from 'next/app'
 import { GetServerSidePropsContext } from 'next'
 import { appWithTranslation } from 'next-i18next'
 import { getCookie, setCookies } from 'cookies-next'
+import { ModalsProvider } from '@mantine/modals'
 
 const colorSchemeKey = 'nextcrm-scheme'
 
@@ -41,7 +42,9 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
           withGlobalStyles
           withNormalizeCSS
           theme={{ colorScheme }}>
-          <Component {...pageProps} />
+          <ModalsProvider>
+            <Component {...pageProps} />
+          </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </>

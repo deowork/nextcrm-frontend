@@ -1,35 +1,52 @@
 import React from 'react'
 import { z as zod } from 'zod'
 import { useForm, zodResolver, formList } from '@mantine/form'
+import { useMediaQuery } from '@mantine/hooks'
 import {
   InputWrapper,
   ActionIcon,
   SimpleGrid,
   TextInput,
-  Textarea,
+  Container,
   Select,
   Button,
   Group,
   Box,
+  createStyles,
 } from '@mantine/core'
-import { Plus, X } from 'tabler-icons-react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { Calendar, Plus, Home, Phone, At, X } from 'tabler-icons-react'
+import TextEditor from '@/components/Inputs/TextEditor'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { DatePicker } from '@mantine/dates'
+import { useRouter } from 'next/router'
+import 'dayjs/locale/uk'
+
+const useStyles = createStyles(theme => ({
+  editor: {
+    qlTooltip: {
+      zIndex: 100,
+    },
+  },
+}))
 
 const schema = zod.object({
   name: zod.string().min(2, { message: 'Name should have at least 2 letters' }),
-  company: zod
-    .string()
-    .min(2, { message: 'Company name should have at least 2 letters' }),
+  company: zod.string(),
   emails: zod.array(
     zod.object({ email: zod.string().email({ message: 'Invalid email' }) }),
   ),
   phones: zod.array(zod.object({ phone: zod.string() })),
   status: zod.enum(['lead', 'client']),
+  birthday: zod.date(),
+  about: zod.string(),
 })
 
 const ContactsCreate = () => {
+  const { classes } = useStyles()
+  const isMobile = useMediaQuery('(max-width: 755px)', false)
+  const { locale } = useRouter()
   const { t } = useTranslation('crm')
 
   const form = useForm({
@@ -40,6 +57,8 @@ const ContactsCreate = () => {
       emails: formList([{ email: '' }]),
       phones: formList([{ phone: '' }]),
       status: 'lead',
+      birthday: null,
+      about: '',
     },
   })
 
@@ -70,6 +89,7 @@ const ContactsCreate = () => {
             mb="sm"
             label={t('Company')}
             placeholder={t('Company name')}
+            icon={<Home size={16} />}
             {...form.getInputProps('company')}
           />
 
@@ -84,6 +104,7 @@ const ContactsCreate = () => {
               <Group key={index} mt="xs">
                 <TextInput
                   placeholder="client@email.com"
+                  icon={<At size={14} />}
                   required
                   sx={{ flex: 1 }}
                   {...form.getListInputProps('emails', index, 'email')}
@@ -120,6 +141,7 @@ const ContactsCreate = () => {
               <Group key={index} mt="xs">
                 <TextInput
                   required
+                  icon={<Phone size={14} />}
                   placeholder="+380500000000"
                   sx={{ flex: 1 }}
                   {...form.getListInputProps('phones', index, 'phone')}
@@ -141,6 +163,38 @@ const ContactsCreate = () => {
               onClick={() => form.addListItem('phones', { phone: '' })}>
               {t('Add phone', { ns: 'actions' })}
             </Button>
+          </InputWrapper>
+
+          <DatePicker
+            locale={locale}
+            allowFreeInput={!isMobile}
+            firstDayOfWeek={locale === 'uk' ? 'monday' : 'sunday'}
+            placeholder={t('Select birthday')}
+            label={t('Date of birth')}
+            icon={<Calendar size={16} />}
+            dropdownType={isMobile ? 'modal' : 'popover'}
+            {...form.getInputProps('birthday')}
+          />
+
+          <InputWrapper
+            mt="sm"
+            label={t('About client')}
+            description={t('Can be used as a draft')}>
+            <Container mt="xs" px={0}>
+              <TextEditor
+                className={classes.editor}
+                sticky={true}
+                stickyOffset={75}
+                controls={[
+                  ['bold', 'italic', 'underline', 'clean'],
+                  ['link', 'orderedList', 'unorderedList'],
+                  ['alignLeft', 'alignCenter', 'alignRight'],
+                  ['h1', 'h2', 'h3', 'blockquote'],
+                  ['sup', 'sub'],
+                ]}
+                {...form.getInputProps('about')}
+              />
+            </Container>
           </InputWrapper>
 
           <Group mt="xl">

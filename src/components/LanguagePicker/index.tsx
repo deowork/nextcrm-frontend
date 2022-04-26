@@ -7,7 +7,7 @@ import flags from './Flags'
 
 const data = [
   { label: 'English', image: flags.britain, code: 'en' },
-  { label: 'Ukrainian', image: flags.ukraine, code: 'ua' },
+  { label: 'Ukrainian', image: flags.ukraine, code: 'uk' },
 ]
 
 const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({

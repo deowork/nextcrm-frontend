@@ -28,5 +28,9 @@
   "Contact phones": "Телефон контакту",
   "Please specify country code for better compatibility": "Будь ласка, вкажіть код країни для кращої сумісності",
   "Lead": "Лід",
-  "Client": "Клієнт"
+  "Client": "Клієнт",
+  "Select birthday": "Оберіть дату народження",
+  "Date of birth": "Дата народження",
+  "About client": "Про клієнта",
+  "Can be used as a draft": "Можна використовувати як чернетку"
 }
