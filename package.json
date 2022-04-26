@@ -1,5 +1,5 @@
 {
-  "name": "breeze-next",
+  "name": "nextcrm-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,24 +8,25 @@
     "start": "next start"
   },
   "dependencies": {
-    "@headlessui/react": "^1.5.0",
-    "@mantine/core": "^4.1.3",
-    "@mantine/form": "^4.1.3",
-    "@mantine/hooks": "^4.1.3",
-    "@mantine/next": "^4.1.3",
-    "@mantine/notifications": "^4.1.3",
+    "@mantine/core": "^4.1.5",
+    "@mantine/form": "^4.1.5",
+    "@mantine/hooks": "^4.1.5",
+    "@mantine/modals": "^4.1.5",
+    "@mantine/next": "^4.1.5",
+    "@mantine/notifications": "^4.1.5",
     "@primer/octicons-react": "^17.0.0",
     "autoprefixer": "^10.4.4",
     "axios": "^0.26.1",
     "base-64": "^1.0.0",
     "cookies-next": "^2.0.4",
-    "next": "^12.1.4",
+    "next": "^12.1.5",
     "next-i18next": "^11.0.0",
     "postcss": "^8.4.12",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "swr": "^1.3.0",
-    "tabler-icons-react": "^1.44.0"
+    "tabler-icons-react": "^1.44.0",
+    "zod": "^3.14.4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",

@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import {
   createStyles,
   Button,
@@ -8,6 +9,7 @@ import {
   Text,
 } from '@mantine/core'
 import { ChevronDown } from 'tabler-icons-react'
+import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   button: {
@@ -28,11 +30,16 @@ const useStyles = createStyles(theme => ({
 }))
 
 export function SplitButton({ controlButton }) {
+  const { t } = useTranslation('actions')
   const { classes, theme } = useStyles()
 
   return (
     <Group noWrap spacing={0}>
-      <Button className={classes.button}>{controlButton.name}</Button>
+      <Link href={controlButton.href} passHref>
+        <Button component="a" className={classes.button}>
+          {t(controlButton.name)}
+        </Button>
+      </Link>
       {controlButton.menu && (
         <Menu
           control={
@@ -59,7 +66,7 @@ export function SplitButton({ controlButton }) {
                   {item.hotkey}
                 </Text>
               }>
-              {item.name}
+              {t(item.name)}
             </Menu.Item>
           ))}
         </Menu>

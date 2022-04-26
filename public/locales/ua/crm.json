@@ -19,5 +19,14 @@
   "Nothing found": "Нічого не знайдено",
   "Name": "Ім'я",
   "Company": "Компанія",
+  "Company name": "Назва компанії",
   "Status": "Стан",
+  "Create contact": "Створити контакт",
+  "Full name": "Ім'я та прізвище",
+  "Contact emails": "Електронна пошта",
+  "Add as many emails as you need": "Додавайте стільки адрес пошти, скільки вам потрібно",
+  "Contact phones": "Телефон контакту",
+  "Please specify country code for better compatibility": "Будь ласка, вкажіть код країни для кращої сумісності",
+  "Lead": "Лід",
+  "Client": "Клієнт"
 }

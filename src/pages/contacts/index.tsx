@@ -24,15 +24,16 @@ const ContactsTable = () => {
   const [search, setSearch] = useState('')
 
   const controlButton = {
-    name: t('Create lead', { ns: 'actions' }),
+    name: 'Create lead',
+    href: '/contacts/create',
     menu: [
       {
-        name: t('Client', { ns: 'actions' }),
+        name: 'Client',
         hotkey: 'Ctrl + A',
         icon: <UserPlus size={16} color={theme.colors.blue[4]} />,
       },
       {
-        name: t('Order', { ns: 'actions' }),
+        name: 'Order',
         hotkey: 'Ctrl + Q',
         icon: <ClipboardPlus size={16} color={theme.colors.blue[4]} />,
       },
