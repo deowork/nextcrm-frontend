@@ -48,10 +48,14 @@ function getStrength(password: string) {
   return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10)
 }
 
-export function PasswordStrength({ popover = true, onChange, ...props }) {
+export function PasswordStrength({
+  popover = true,
+  value,
+  onChange,
+  ...props
+}) {
   const { t } = useTranslation('common')
   const [popoverOpened, setPopoverOpened] = useState(false)
-  const [value, setValue] = useInputState('')
 
   const strength = getStrength(value)
   const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red'
@@ -83,7 +87,6 @@ export function PasswordStrength({ popover = true, onChange, ...props }) {
     ))
 
   const handlePasswordChange = event => {
-    setValue(event.currentTarget.value)
     onChange(event.currentTarget.value)
   }
 

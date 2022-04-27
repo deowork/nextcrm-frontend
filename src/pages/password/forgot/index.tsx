@@ -84,11 +84,9 @@ const ForgotPassword = () => {
         </Text>
 
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
-          {/* Session Status */}
-          <AuthSessionStatus className="mb-4" status={status} />
+          <AuthSessionStatus mb={10} status={status} />
 
-          {/* Validation Errors */}
-          <AuthValidationErrors className="mb-4" errors={errors} />
+          <AuthValidationErrors mb={10} errors={errors} />
 
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput

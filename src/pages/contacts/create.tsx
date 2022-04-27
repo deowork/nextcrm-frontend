@@ -99,7 +99,8 @@ const ContactsCreate = () => {
             styles={{
               description: { marginBottom: 0 },
             }}
-            description={t('Add as many emails as you need')}>
+            description={t('Add as many emails as you need')}
+            error={form.errors.email && 'Invalid emails'}>
             {form.values.emails.map((_, index) => (
               <Group key={index} mt="xs">
                 <TextInput
@@ -136,7 +137,8 @@ const ContactsCreate = () => {
             }}
             description={t(
               'Please specify country code for better compatibility',
-            )}>
+            )}
+            error={form.errors.phones && 'Invalid phones'}>
             {form.values.phones.map((_, index) => (
               <Group key={index} mt="xs">
                 <TextInput

@@ -1,11 +1,10 @@
-import AuthCard from '@/components/AuthCard'
-import ApplicationLogo from '@/components/ApplicationLogo'
+import { useEffect, useState } from 'react'
+import { TextLogo } from '@/components/ApplicationLogo'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import AuthValidationErrors from '@/components/AuthValidationErrors'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { useAuth } from '@/hooks/auth'
 import { useForm } from '@mantine/form'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { decode as atob } from 'base-64'
@@ -27,9 +26,12 @@ import {
   GoogleButton,
   GithubButton,
 } from '@/components/SocialButtons/SocialButtons'
-import { At } from 'tabler-icons-react'
+import { At, Lock } from 'tabler-icons-react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { useToggle, upperFirst } from '@mantine/hooks'
+import { FooterSocial } from '@/components/Layouts/Home/Footer'
+import { PasswordStrength } from '@/components/PasswordStrengthMeter'
 
 const useStyles = createStyles(theme => ({
   link: {
@@ -41,19 +43,25 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface FormValues {
+  name: string
   email: string
   password: string
+  password_confirmation: string
   remember: boolean
 }
 
 const Login = (props: PaperProps<'div'>) => {
+  const router = useRouter()
   const { classes } = useStyles()
   const { t } = useTranslation('common')
+  const [type, toggle] = useToggle('login', ['login', 'register'])
 
   const form = useForm<FormValues>({
     initialValues: {
+      name: '',
       email: '',
       password: '',
+      password_confirmation: '',
       remember: false,
     },
 
@@ -62,9 +70,7 @@ const Login = (props: PaperProps<'div'>) => {
     },
   })
 
-  const router = useRouter()
-
-  const { login } = useAuth({
+  const { login, register } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
@@ -81,78 +87,99 @@ const Login = (props: PaperProps<'div'>) => {
   })
 
   const handleSubmit = async (values: FormValues) => {
-    await login({ setErrors, setStatus, ...values })
+    type === 'register'
+      ? await register({ setErrors, ...values })
+      : await login({ setStatus, setErrors, ...values })
   }
 
   return (
     <GuestLayout>
-      <AuthCard
-        logo={
-          <Center mt={30}>
-            <Link href="/">
-              <a>
-                <ApplicationLogo width="80" height="80" fill="#ef3b2d" />
-              </a>
-            </Link>
-          </Center>
-        }>
-        <Paper
-          radius="md"
-          p="xl"
-          sx={{ maxWidth: 500 }}
-          mx="auto"
-          mt={30}
-          withBorder
-          {...props}>
-          <Text size="lg" weight={500}>
-            {t('Welcome to')} NextCRM
-          </Text>
+      <Center mt={45}>
+        <TextLogo size="xl" weight={500} />
+      </Center>
 
-          <Group grow mb="md" mt="md">
-            <GoogleButton radius="xl">Google</GoogleButton>
-            <GithubButton radius="xl">Github</GithubButton>
-          </Group>
+      <Paper
+        radius="md"
+        p="xl"
+        sx={{ maxWidth: 500 }}
+        mx="auto"
+        mt={40}
+        withBorder
+        {...props}>
+        <Text size="lg" weight={500}>
+          {t('Welcome to')} NextCRM
+        </Text>
 
-          <Divider
-            label={t('Or continue with email')}
-            labelPosition="center"
-            my="lg"
-          />
+        <Group grow mb="md" mt="md">
+          <GoogleButton radius="xl">Google</GoogleButton>
+          <GithubButton radius="xl">Github</GithubButton>
+        </Group>
 
-          <AuthSessionStatus mb={20} status={status} />
+        <Divider
+          label={t('Or continue with email')}
+          labelPosition="center"
+          my="lg"
+        />
 
-          <AuthValidationErrors mb={15} errors={errors} />
+        <AuthSessionStatus mb={20} status={status} />
 
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <Group direction="column" grow>
+        <AuthValidationErrors mb={15} errors={errors} />
+
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Group direction="column" grow>
+            {type === 'register' && (
               <TextInput
-                required
                 autoFocus
-                icon={<At size={16} />}
-                label={t('Email')}
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={form.values.email}
-                onChange={event =>
-                  form.setFieldValue('email', event.currentTarget.value)
-                }
-                error={form.errors.email && 'Invalid email'}
-                {...form.getInputProps('email')}
+                label={t('Name')}
+                placeholder={t('Name')}
+                {...form.getInputProps('name')}
               />
+            )}
 
+            <TextInput
+              required
+              autoFocus
+              icon={<At size={16} />}
+              label={t('Email')}
+              id="email"
+              type="email"
+              placeholder="your@email.com"
+              {...form.getInputProps('email')}
+            />
+
+            {type === 'register' ? (
+              <>
+                <PasswordStrength
+                  required
+                  id="password"
+                  label={t('Password')}
+                  placeholder={t('Your password')}
+                  autoComplete="new-password"
+                  icon={<Lock size={16} />}
+                  {...form.getInputProps('password')}
+                />
+
+                <PasswordInput
+                  required
+                  id="password_confirmation"
+                  label={t('Confirm password')}
+                  placeholder={t('Confirm password')}
+                  icon={<Lock size={16} />}
+                  {...form.getInputProps('password_confirmation')}
+                />
+              </>
+            ) : (
               <PasswordInput
                 required
                 label={t('Password')}
                 id="password"
                 placeholder={t('Your password')}
-                value={form.values.password}
-                onChange={event =>
-                  form.setFieldValue('password', event.currentTarget.value)
-                }
+                icon={<Lock size={16} />}
                 {...form.getInputProps('password')}
               />
+            )}
 
+            {type === 'login' && (
               <Checkbox
                 mt="md"
                 id="remember_me"
@@ -160,21 +187,34 @@ const Login = (props: PaperProps<'div'>) => {
                 label={t('Remember me')}
                 {...form.getInputProps('remember', { type: 'checkbox' })}
               />
-            </Group>
+            )}
+          </Group>
 
-            <Group position="apart" mt="xl">
+          <Group position="apart" mt="xl">
+            <Group>
               <Anchor
+                component="button"
+                type="button"
                 color="gray"
-                href="/forgot-password"
-                size="xs"
-                component={Link}>
-                <a className={classes.link}>{t('Forgot your password?')}</a>
+                onClick={() => toggle()}
+                size="xs">
+                {type === 'register' ? t('Login') : t('Register')}
               </Anchor>
-              <Button type="submit">{t('Login')}</Button>
+              <Link href="/password/forgot" passHref>
+                <Anchor
+                  type="button"
+                  color="gray"
+                  size="xs"
+                  className={classes.link}>
+                  {t('Forgot your password?')}
+                </Anchor>
+              </Link>
             </Group>
-          </form>
-        </Paper>
-      </AuthCard>
+            <Button type="submit">{t(upperFirst(type))}</Button>
+          </Group>
+        </form>
+      </Paper>
+      <FooterSocial user={false} />
     </GuestLayout>
   )
 }
