@@ -1,9 +1,14 @@
-const AuthCard = ({ logo, children }) => (
-  <div>
-    <div>{logo}</div>
+import { TextLogo } from '@/components/ApplicationLogo'
+import { Center } from '@mantine/core'
 
-    <div>{children}</div>
-  </div>
+const AuthCard = ({ children }) => (
+  <>
+    <Center mt={45} mb={40}>
+      <TextLogo size="xl" weight={500} />
+    </Center>
+
+    {children}
+  </>
 )
 
 export default AuthCard

@@ -79,19 +79,7 @@ export function FeaturesTitle({ title, description, features, actions }) {
             {description}
           </Text>
 
-          <Group>
-            <Button
-              mt="xl"
-              radius="md"
-              size="md"
-              variant="gradient"
-              gradient={{ deg: 125, from: 'blue', to: 'cyan' }}>
-              {actions.primary}
-            </Button>
-            <Button mt="xl" radius="md" size="md" variant="default">
-              {actions.secondary}
-            </Button>
-          </Group>
+          {actions}
         </Col>
         <Col span={12} md={7}>
           <SimpleGrid

@@ -37,7 +37,7 @@ const useStyles = createStyles(theme => ({
   },
 }))
 
-export function FooterSocial({ user }) {
+export function FooterSocial({ user = false }) {
   const { classes } = useStyles()
 
   return (

@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import { useAuth } from '@/hooks/auth'
 import { HeaderResponsive } from '@/components/Layouts/Home/Header'
 import { FeaturesTitle } from '@/components/Sections/Features'
 import { AppWindow, ClearAll, Cloud, Users } from 'tabler-icons-react'
 import { FooterSocial } from '@/components/Layouts/Home/Footer'
-import { Text } from '@mantine/core'
+import { Text, Modal, Group, Button } from '@mantine/core'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import AuthForm from '@/components/AuthForm'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter()
   const { t } = useTranslation('common')
   const { user } = useAuth({ middleware: 'guest' })
+  const [authModalOpened, setAuthModalOpened] = useState(false)
 
   const links = [
     { label: t('Home'), link: '/' },
@@ -71,13 +75,37 @@ export default function Home() {
           </>
         }
         description={t('The perfect solution for start-up business')}
-        actions={{
-          primary: t('Get started'),
-          secondary: t('Contact us'),
-        }}
+        actions={
+          <Group>
+            <Button
+              mt="xl"
+              radius="md"
+              size="md"
+              variant="gradient"
+              onClick={() =>
+                user ? router.push('/dashboard') : setAuthModalOpened(true)
+              }
+              gradient={{ deg: 125, from: 'blue', to: 'cyan' }}>
+              {t('Get started')}
+            </Button>
+            <Button mt="xl" radius="md" size="md" variant="default">
+              {t('Contact us')}
+            </Button>
+          </Group>
+        }
         features={features}
       />
       <FooterSocial user={user} />
+      <Modal
+        title={t('Get started')}
+        size="md"
+        shadow="xl"
+        opened={authModalOpened}
+        overlayBlur={3}
+        overlayOpacity={0.55}
+        onClose={() => setAuthModalOpened(false)}>
+        <AuthForm initForm="register" />
+      </Modal>
     </>
   )
 }
