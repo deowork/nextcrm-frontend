@@ -17,6 +17,7 @@
     "@mantine/notifications": "^4.2.1",
     "@mantine/rte": "^4.2.1",
     "@primer/octicons-react": "^17.0.0",
+    "@react-forked/dnd": "^14.0.2",
     "autoprefixer": "^10.4.4",
     "axios": "^0.26.1",
     "base-64": "^1.0.0",

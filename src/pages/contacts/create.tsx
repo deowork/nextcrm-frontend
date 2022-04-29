@@ -1,27 +1,42 @@
-import React from 'react'
 import { z as zod } from 'zod'
+import { useRouter } from 'next/router'
 import { useForm, zodResolver, formList } from '@mantine/form'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 import { useMediaQuery } from '@mantine/hooks'
+import TextEditor from '@/components/Inputs/TextEditor'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { DatePicker } from '@mantine/dates'
+import 'dayjs/locale/uk'
 import {
   InputWrapper,
   ActionIcon,
   SimpleGrid,
   TextInput,
   Container,
+  Center,
   Select,
   Button,
   Group,
+  Code,
   Box,
   createStyles,
 } from '@mantine/core'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useTranslation } from 'next-i18next'
-import { Calendar, Plus, Home, Phone, At, X } from 'tabler-icons-react'
-import TextEditor from '@/components/Inputs/TextEditor'
-import AppLayout from '@/components/Layouts/AppLayout'
-import { DatePicker } from '@mantine/dates'
-import { useRouter } from 'next/router'
-import 'dayjs/locale/uk'
+import {
+  GripVertical,
+  Calendar,
+  Plus,
+  Home,
+  Phone,
+  At,
+  X,
+} from 'tabler-icons-react'
+import {
+  resetServerContext,
+  DragDropContext,
+  Draggable,
+  Droppable,
+} from '@react-forked/dnd'
 
 const useStyles = createStyles(theme => ({
   editor: {
@@ -62,6 +77,58 @@ const ContactsCreate = () => {
     },
   })
 
+  resetServerContext()
+
+  const emails = form.values.emails.map((_, index) => (
+    <Draggable key={index} index={index} draggableId={index.toString()}>
+      {provided => (
+        <Group ref={provided.innerRef} mt="xs" {...provided.draggableProps}>
+          <Center {...provided.dragHandleProps}>
+            <GripVertical size={18} />
+          </Center>
+          <TextInput
+            placeholder="client@email.com"
+            icon={<At size={14} />}
+            required
+            sx={{ flex: 1 }}
+            {...form.getListInputProps('emails', index, 'email')}
+          />
+          <ActionIcon
+            color="red"
+            variant="hover"
+            onClick={() => form.removeListItem('emails', index)}>
+            <X size={16} />
+          </ActionIcon>
+        </Group>
+      )}
+    </Draggable>
+  ))
+
+  const phones = form.values.phones.map((_, index) => (
+    <Draggable key={index} index={index} draggableId={index.toString()}>
+      {provided => (
+        <Group ref={provided.innerRef} mt="xs" {...provided.draggableProps}>
+          <Center {...provided.dragHandleProps}>
+            <GripVertical size={18} />
+          </Center>
+          <TextInput
+            required
+            icon={<Phone size={14} />}
+            placeholder="+380500000000"
+            sx={{ flex: 1 }}
+            {...form.getListInputProps('phones', index, 'phone')}
+          />
+          <ActionIcon
+            color="red"
+            variant="hover"
+            onClick={() => form.removeListItem('phones', index)}>
+            <X size={16} />
+          </ActionIcon>
+        </Group>
+      )}
+    </Draggable>
+  ))
+
   return (
     <AppLayout header={<h2>{t('Create contact')}</h2>}>
       <form onSubmit={form.onSubmit(values => console.log(values))}>
@@ -101,23 +168,22 @@ const ContactsCreate = () => {
             }}
             description={t('Add as many emails as you need')}
             error={form.errors.email && 'Invalid emails'}>
-            {form.values.emails.map((_, index) => (
-              <Group key={index} mt="xs">
-                <TextInput
-                  placeholder="client@email.com"
-                  icon={<At size={14} />}
-                  required
-                  sx={{ flex: 1 }}
-                  {...form.getListInputProps('emails', index, 'email')}
-                />
-                <ActionIcon
-                  color="red"
-                  variant="hover"
-                  onClick={() => form.removeListItem('emails', index)}>
-                  <X size={16} />
-                </ActionIcon>
-              </Group>
-            ))}
+            <DragDropContext
+              onDragEnd={({ destination, source }) =>
+                form.reorderListItem('emails', {
+                  from: source.index,
+                  to: destination?.index ?? source.index,
+                })
+              }>
+              <Droppable droppableId="emails-list" direction="vertical">
+                {provided => (
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {emails}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
 
             <Button
               mt="xs"
@@ -139,23 +205,22 @@ const ContactsCreate = () => {
               'Please specify country code for better compatibility',
             )}
             error={form.errors.phones && 'Invalid phones'}>
-            {form.values.phones.map((_, index) => (
-              <Group key={index} mt="xs">
-                <TextInput
-                  required
-                  icon={<Phone size={14} />}
-                  placeholder="+380500000000"
-                  sx={{ flex: 1 }}
-                  {...form.getListInputProps('phones', index, 'phone')}
-                />
-                <ActionIcon
-                  color="red"
-                  variant="hover"
-                  onClick={() => form.removeListItem('phones', index)}>
-                  <X size={16} />
-                </ActionIcon>
-              </Group>
-            ))}
+            <DragDropContext
+              onDragEnd={({ destination, source }) =>
+                form.reorderListItem('phones', {
+                  from: source.index,
+                  to: destination?.index ?? source.index,
+                })
+              }>
+              <Droppable droppableId="phones-list" direction="vertical">
+                {provided => (
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {phones}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
 
             <Button
               mt="xs"
