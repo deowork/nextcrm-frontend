@@ -5,25 +5,25 @@ import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import {
-  Anchor,
-  Box,
-  Button,
-  Center,
-  Container,
+  PasswordInput,
   createStyles,
+  PaperProps,
+  Container,
+  TextInput,
+  Button,
+  Anchor,
+  Center,
   Group,
   Paper,
-  PaperProps,
-  PasswordInput,
-  Text,
-  TextInput,
   Title,
+  Text,
+  Box,
 } from '@mantine/core'
 import { ArrowLeft, Lock } from 'tabler-icons-react'
 import { useForm } from '@mantine/form'
 import { PasswordStrength } from '@/components/PasswordStrengthMeter'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
-import AuthValidationErrors from '@/components/AuthValidationErrors'
+import AuthSessionStatus from '@/components/Auth/AuthSessionStatus'
+import AuthValidationErrors from '@/components/Auth/AuthValidationErrors'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 
 const useStyles = createStyles(theme => ({
@@ -68,6 +68,7 @@ const PasswordReset = (props: PaperProps<'div'>) => {
 
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const form = useForm({
     initialValues: {
@@ -84,12 +85,19 @@ const PasswordReset = (props: PaperProps<'div'>) => {
   })
 
   const handleSubmit = async (props: FormValues) => {
+    setLoading(true)
     await resetPassword({
       setErrors,
       setStatus,
       ...props,
     })
   }
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      setLoading(false)
+    }
+  }, [errors, status])
 
   useEffect(() => {
     form.setFieldValue(
@@ -177,7 +185,10 @@ const PasswordReset = (props: PaperProps<'div'>) => {
                   </Box>
                 </Center>
               </Anchor>
-              <Button className={classes.control} type="submit">
+              <Button
+                loading={loading}
+                className={classes.control}
+                type="submit">
                 {t('Reset password')}
               </Button>
             </Group>

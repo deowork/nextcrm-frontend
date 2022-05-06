@@ -11,16 +11,21 @@ import {
   Container,
   Title,
 } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { useForm, zodResolver } from '@mantine/form'
 import { ArrowLeft } from 'tabler-icons-react'
 import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
-import AuthValidationErrors from '@/components/AuthValidationErrors'
+import AuthSessionStatus from '@/components/Auth/AuthSessionStatus'
+import AuthValidationErrors from '@/components/Auth/AuthValidationErrors'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { z as zod } from 'zod'
+
+const schema = zod.object({
+  email: zod.string().email({ message: 'Invalid email' }),
+})
 
 const useStyles = createStyles(theme => ({
   title: {
@@ -58,20 +63,25 @@ const ForgotPassword = () => {
 
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const form = useForm({
+    schema: zodResolver(schema),
     initialValues: {
       email: '',
-    },
-
-    validate: {
-      email: value => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
   })
 
   const handleSubmit = async ({ email }) => {
+    setLoading(true)
     await forgotPassword({ setErrors, setStatus, email })
   }
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      setLoading(false)
+    }
+  }, [errors, status])
 
   return (
     <GuestLayout>
@@ -114,7 +124,10 @@ const ForgotPassword = () => {
                   </Box>
                 </Center>
               </Anchor>
-              <Button className={classes.control} type="submit">
+              <Button
+                loading={loading}
+                className={classes.control}
+                type="submit">
                 {t('Reset password')}
               </Button>
             </Group>

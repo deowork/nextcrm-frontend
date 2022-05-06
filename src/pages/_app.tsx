@@ -10,6 +10,7 @@ import { GetServerSidePropsContext } from 'next'
 import { appWithTranslation } from 'next-i18next'
 import { getCookie, setCookies } from 'cookies-next'
 import { ModalsProvider } from '@mantine/modals'
+import { NotificationsProvider } from '@mantine/notifications'
 
 const colorSchemeKey = 'nextcrm-scheme'
 
@@ -41,9 +42,11 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
         <MantineProvider
           withGlobalStyles
           withNormalizeCSS
-          theme={{ colorScheme }}>
+          theme={{ colorScheme, loader: 'dots' }}>
           <ModalsProvider>
-            <Component {...pageProps} />
+            <NotificationsProvider position="bottom-right">
+              <Component {...pageProps} />
+            </NotificationsProvider>
           </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

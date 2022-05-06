@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import { useAuth } from '@/hooks/auth'
+import { useTranslation } from 'next-i18next'
 import {
   UnstyledButton,
   createStyles,
   Divider,
-  Footer as MantineFooter,
+  Footer as CoreFooter,
   Avatar,
   Group,
   Text,
@@ -17,7 +18,6 @@ import {
   Settings,
   Logout,
 } from 'tabler-icons-react'
-import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   footer: {
@@ -46,13 +46,12 @@ const useStyles = createStyles(theme => ({
 
 const Footer = ({ user, height = 70 }) => {
   const { t } = useTranslation('crm')
-  const { logout } = useAuth({ middleware: 'auth' })
-  const [userMenuOpened, setUserMenuOpened] = useState(false)
-
   const { classes, cx } = useStyles()
+  const [userMenuOpened, setUserMenuOpened] = useState(false)
+  const { logout } = useAuth({ middleware: 'auth' })
 
   return (
-    <MantineFooter height={height} p="md">
+    <CoreFooter height={height} p="md">
       <Group position="left">
         <Menu
           size={260}
@@ -93,7 +92,7 @@ const Footer = ({ user, height = 70 }) => {
           </Menu.Item>
         </Menu>
       </Group>
-    </MantineFooter>
+    </CoreFooter>
   )
 }
 

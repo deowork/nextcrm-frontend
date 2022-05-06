@@ -1,8 +1,8 @@
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { FooterSocial } from '@/components/Layouts/Home/Footer'
-import AuthCard from '@/components/AuthCard'
-import AuthForm from '@/components/AuthForm'
+import AuthCard from '@/components/Auth/AuthCard'
+import AuthForm from '@/components/Auth/AuthForm'
 
 const Login = () => (
   <GuestLayout>

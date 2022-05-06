@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
-import AuthValidationErrors from '@/components/AuthValidationErrors'
+import AuthSessionStatus from '@/components/Auth/AuthSessionStatus'
+import AuthValidationErrors from '@/components/Auth/AuthValidationErrors'
 import { useAuth } from '@/hooks/auth'
 import { useForm } from '@mantine/form'
 import { useRouter } from 'next/router'
@@ -13,16 +13,12 @@ import {
   Button,
   Paper,
   Text,
-  PaperProps,
   Divider,
   Anchor,
   Group,
   createStyles,
 } from '@mantine/core'
-import {
-  GoogleButton,
-  GithubButton,
-} from '@/components/SocialButtons/SocialButtons'
+import { GoogleButton, GithubButton } from '@/components/Buttons/Social'
 import { At, Lock } from 'tabler-icons-react'
 import { useTranslation } from 'next-i18next'
 import { useToggle, upperFirst } from '@mantine/hooks'
@@ -50,6 +46,7 @@ const AuthForm = ({ initForm = 'login', switchToggle = true, ...props }) => {
   const { classes } = useStyles()
   const { t } = useTranslation('common')
   const [type, toggle] = useToggle(initForm, ['login', 'register'])
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -82,10 +79,18 @@ const AuthForm = ({ initForm = 'login', switchToggle = true, ...props }) => {
   })
 
   const handleSubmit = async (values: FormValues) => {
+    setLoading(true)
+
     type === 'register'
       ? await register({ setErrors, ...values })
       : await login({ setStatus, setErrors, ...values })
   }
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      setLoading(false)
+    }
+  }, [errors, status])
 
   return (
     <Paper {...props}>
@@ -152,14 +157,41 @@ const AuthForm = ({ initForm = 'login', switchToggle = true, ...props }) => {
               />
             </>
           ) : (
-            <PasswordInput
-              required
-              label={t('Password')}
-              id="password"
-              placeholder={t('Your password')}
-              icon={<Lock size={16} />}
-              {...form.getInputProps('password')}
-            />
+            <div>
+              <Group position="apart" mb={5}>
+                <Text
+                  component="label"
+                  htmlFor="password"
+                  size="sm"
+                  weight={500}>
+                  {t('Password')}{' '}
+                  <Text component="span" size="sm" color="#ff6b6b">
+                    *
+                  </Text>
+                </Text>
+
+                <Link href="/password/forgot" passHref>
+                  <Anchor<'a'>
+                    sx={theme => ({
+                      color:
+                        theme.colors[theme.primaryColor][
+                          theme.colorScheme === 'dark' ? 4 : 6
+                        ],
+                      fontWeight: 500,
+                      fontSize: theme.fontSizes.xs,
+                    })}>
+                    {t('Forgot your password?')}
+                  </Anchor>
+                </Link>
+              </Group>
+              <PasswordInput
+                required
+                id="password"
+                placeholder={t('Your password')}
+                icon={<Lock size={16} />}
+                {...form.getInputProps('password')}
+              />
+            </div>
           )}
 
           {type === 'login' && (
@@ -197,7 +229,9 @@ const AuthForm = ({ initForm = 'login', switchToggle = true, ...props }) => {
               </Anchor>
             </Link>
           </Group>
-          <Button type="submit">{t(upperFirst(type))}</Button>
+          <Button type="submit" loading={loading}>
+            {t(upperFirst(type))}
+          </Button>
         </Group>
       </form>
     </Paper>

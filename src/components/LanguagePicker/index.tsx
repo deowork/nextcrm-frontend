@@ -21,7 +21,6 @@ const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
     border: `1px solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2]
     }`,
-    transition: 'background-color 150ms ease',
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[opened ? 5 : 6]
@@ -30,6 +29,7 @@ const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
         : theme.white,
 
     '&:hover': {
+      transition: 'background-color 150ms ease',
       backgroundColor:
         theme.colorScheme === 'dark'
           ? theme.colors.dark[5]

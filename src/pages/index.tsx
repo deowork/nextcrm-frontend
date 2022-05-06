@@ -8,7 +8,7 @@ import { FooterSocial } from '@/components/Layouts/Home/Footer'
 import { Text, Modal, Group, Button } from '@mantine/core'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import AuthForm from '@/components/AuthForm'
+import AuthForm from '@/components/Auth/AuthForm'
 import { useRouter } from 'next/router'
 
 export default function Home() {

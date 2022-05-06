@@ -4,9 +4,8 @@ import { useAuth } from '@/hooks/auth'
 import { useDisclosure } from '@mantine/hooks'
 import { createStyles, AppShell, Text } from '@mantine/core'
 import Header from '@/components/Layouts/App/Header'
-import Navigation from '@/components/Layouts/App/Navigation'
+import Navbar from '@/components/Layouts/App/Navbar'
 import Footer from '@/components/Layouts/App/Footer'
-import { useTranslation } from 'next-i18next'
 
 const useStyles = createStyles(theme => ({
   main: {
@@ -30,11 +29,7 @@ const AppLayout = ({ header, children }) => {
       navbarOffsetBreakpoint="sm"
       header={<Header height={75} opened={opened} disclosure={disclosure} />}
       navbar={
-        <Navigation
-          width={{ sm: 200, lg: 300 }}
-          links={routes}
-          opened={opened}
-        />
+        <Navbar width={{ sm: 200, lg: 300 }} links={routes} opened={opened} />
       }
       footer={<Footer height={70} user={user} />}>
       <Text>{header}</Text>
