@@ -32,5 +32,11 @@
   "Select birthday": "Оберіть дату народження",
   "Date of birth": "Дата народження",
   "About client": "Про клієнта",
-  "Can be used as a draft": "Можна використовувати як чернетку"
+  "Can be used as a draft": "Можна використовувати як чернетку",
+  "Revenue": "Дохід",
+  "Processed leads": "Оброблені ліди",
+  "Processed": "Оброблено",
+  "Compared to previous month": "Порівняно з попереднім місяцем",
+  "Remaining": "Залишилося",
+  "In progress": "В процесі"
 }
