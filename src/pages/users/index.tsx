@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import {
   Table,
   Group,
   Text,
-  ActionIcon,
   Skeleton,
   ScrollArea,
+  ActionIcon,
+  Modal,
 } from '@mantine/core'
-import { Pencil, Trash } from 'tabler-icons-react'
+
 import AppLayout from '@/components/Layouts/AppLayout'
 import axios from '@/lib/axios'
 import useSWR from 'swr'
 import PopoverCard from '@/components/UserCard/PopoverCard'
+import { Pencil, Trash } from 'tabler-icons-react'
+import UserEdit from '@/components/UserCard/UserEdit'
 
 interface UsersTableProps {
   data: {
@@ -33,7 +36,7 @@ const UsersTable = ({ data }: UsersTableProps) => {
   const { t } = useTranslation('crm')
   const { data: users, error } = useSWR(usersEndpoint, getData)
 
-  const rows = users?.map(item => (
+  const rows = users?.data.map(item => (
     <tr key={item.id}>
       <td>
         <Group spacing="sm">
@@ -50,9 +53,7 @@ const UsersTable = ({ data }: UsersTableProps) => {
       </td>
       <td>
         <Group spacing={0} position="right">
-          <ActionIcon>
-            <Pencil size={16} />
-          </ActionIcon>
+          <UserEdit user={item} />
           <ActionIcon color="red">
             <Trash size={16} />
           </ActionIcon>
