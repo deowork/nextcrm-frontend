@@ -38,5 +38,14 @@
   "Processed": "Оброблено",
   "Compared to previous month": "Порівняно з попереднім місяцем",
   "Remaining": "Залишилося",
-  "In progress": "В процесі"
+  "In progress": "В процесі",
+  "assigned to": "призначено до",
+  "Manager assigned to contact": "Менеджеру призначено контакт",
+  "Created from": "Створено з",
+  "contact": "контакту",
+  "lead": "ліда",
+  "New client": "Новий клієнт",
+  "New order": "Нове замовлення",
+  "New lead": "Новий лід",
+  "Created by API": "Створений за допомогою API"
 }

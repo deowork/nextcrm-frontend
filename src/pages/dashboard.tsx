@@ -5,6 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import { ProgressCard } from '@/components/ProgressCard'
 import { StatsGrid } from '@/components/StatsGrid'
+import { ActionsLog } from '@/components/ActionsLog'
 
 const Dashboard = () => {
   const { t } = useTranslation('crm')
@@ -64,6 +65,7 @@ const Dashboard = () => {
           spacing="md"
           breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
           <ProgressCard data={processedStats} />
+          <ActionsLog />
         </SimpleGrid>
       </Container>
     </AppLayout>

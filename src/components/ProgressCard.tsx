@@ -3,6 +3,7 @@ import { createStyles, Text, Card, RingProgress, Group } from '@mantine/core'
 
 const useStyles = createStyles(theme => ({
   card: {
+    height: 'fit-content',
     backgroundColor:
       theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
   },

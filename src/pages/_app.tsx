@@ -11,8 +11,14 @@ import { appWithTranslation } from 'next-i18next'
 import { getCookie, setCookies } from 'cookies-next'
 import { ModalsProvider } from '@mantine/modals'
 import { NotificationsProvider } from '@mantine/notifications'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+import uk from 'javascript-time-ago/locale/uk.json'
 
 const colorSchemeKey = 'nextcrm-scheme'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(uk)
 
 const App = (props: AppProps & { colorScheme: ColorScheme }) => {
   const { Component, pageProps } = props
